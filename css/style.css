@@ -1,55 +1,380 @@
-h1{
-    text-align: center;
+/* =========================================================
+   Todo App — Modern minimalist redesign
+   Palette: cool neutral surface + single indigo accent,
+   muted sage for "done", quiet red reserved for destructive actions.
+   ========================================================= */
+
+   :root {
+    --bg: #F3F4F6;
+    --surface: #FFFFFF;
+    --border: #E4E6EB;
+    --border-strong: #D3D6DC;
+
+    --text: #1B1E27;
+    --text-muted: #767C8A;
+    --text-faint: #A2A7B3;
+
+    --accent: #3A4CE0;
+    --accent-hover: #2E3DBC;
+    --accent-soft: #EEF0FD;
+
+    --done: #3E9C71;
+    --done-soft: #EAF6EF;
+
+    --danger: #D6483F;
+    --danger-hover: #B93A32;
+    --danger-soft: #FCEDEC;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+
+    --shadow-card: 0 1px 2px rgba(20, 22, 30, 0.04), 0 1px 1px rgba(20, 22, 30, 0.03);
+    --shadow-raised: 0 8px 24px rgba(20, 22, 30, 0.08);
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
-.form{
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 48px 20px 80px;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 15% 0%, #F8F9FC 0%, var(--bg) 45%);
+    color: var(--text);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Header ---------- */
+
+h1 {
+    text-align: left;
+    max-width: 560px;
+    margin: 0 auto;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+h1::after {
+    content: "Keep today's list short and finish it.";
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+    color: var(--text-muted);
+}
+
+/* ---------- Add task bar ---------- */
+
+.form {
+    max-width: 560px;
+    margin: 28px auto 0;
     display: flex;
     justify-content: center;
+    align-items: stretch;
     gap: 10px;
-    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 6px;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
-#input{
-    width: 1300px;
-    height: 30px;
+
+.form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
 }
-#add-task{
-    width: 35px;
-    height: 35px;
-    
+
+#input {
+    flex: 1;
+    width: auto;
+    height: 42px;
+    padding-left: 14px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text);
+    font-family: inherit;
 }
-.filter{
+
+#input::placeholder {
+    color: var(--text-faint);
+}
+
+#input:focus {
+    outline: none;
+}
+
+#add-task {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    gap: 30px;
-    
+    cursor: pointer;
+    transition: background 0.15s var(--ease), transform 0.1s var(--ease);
 }
-.todo-list{
+
+#add-task:hover {
+    background: var(--accent-hover);
+}
+
+#add-task:active {
+    transform: scale(0.94);
+}
+
+#add-task img {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+}
+
+/* ---------- Filter tabs ---------- */
+
+.filter {
+    max-width: 560px;
+    margin: 24px auto 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+.filter button {
+    padding: 8px 4px;
+    margin-right: 20px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-muted);
+    transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+
+.filter button:hover {
+    color: var(--text);
+    background: transparent;
+}
+
+.filter button.active {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+}
+
+/* ---------- Task list ---------- */
+
+.todo-list {
+    max-width: 560px;
+    margin: 20px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.todo-list p {
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 14px;
+    padding: 32px 0;
+    margin: 0;
+}
+
+.todo-item {
+    width: 100%;
+    height: auto;
+    padding: 14px 14px 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-self: stretch;
+    gap: 12px;
+    margin-top: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.todo-item:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-raised);
+}
+
+.todo-item input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.todo-item p {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+    color: var(--text);
+    text-align: left;
+    word-break: break-word;
+    transition: color 0.15s var(--ease);
+}
+
+.todo-item .edit-task,
+.todo-item .delete-task {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    opacity: 0.55;
+    transition: opacity 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.todo-item .edit-task:hover {
+    opacity: 1;
+    background: var(--accent-soft);
+}
+
+.todo-item .delete-task:hover {
+    opacity: 1;
+    background: var(--danger-soft);
+}
+
+.todo-item .edit-task img,
+.todo-item .delete-task img {
+    filter: grayscale(1) opacity(0.75);
+}
+
+.todo-item.completed {
+    background: var(--done-soft);
+    border-color: var(--done-soft);
+    border-left-color: var(--done);
+    font-weight: 400;
+}
+
+.todo-item.completed p {
+    color: var(--text-muted);
+    text-decoration-color: var(--text-faint);
+}
+
+/* ---------- Footer / stats ---------- */
+
+.Footer {
+    max-width: 560px;
+    margin: 28px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 16px;
 }
-.todo-item{
-    width: 95%;
-    height: auto;
-    padding: 10px;
+
+.Statistics {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 0;
+}
+
+.Statistics p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.Statistics span {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.Clear {
+    display: flex;
+    justify-content: center;
+}
+
+#clear-completed {
+    display: inline-flex;
     justify-self: center;
-    gap: 10px;
-    margin-top: 20px;
-    border: 1px solid black;
-    border-radius: 10px;
+    margin-top: 0;
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--danger);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.15s var(--ease);
 }
-.edit-task{
-    margin-left: auto;
+
+#clear-completed:hover {
+    background: var(--danger-soft);
+    border-color: var(--danger-soft);
+    color: var(--danger-hover);
 }
-.Statistics{
-    display: flex;
-    justify-content: center;
-    gap: 100px;
-    margin-top: 20px;
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+    body {
+        padding: 32px 16px 64px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .filter {
+        gap: 0;
+    }
+
+    .filter button {
+        margin-right: 14px;
+        font-size: 13px;
+    }
+
+    .todo-item {
+        padding: 12px;
+    }
+
+    .Statistics {
+        gap: 12px;
+    }
 }
-.Clear{
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
 }
