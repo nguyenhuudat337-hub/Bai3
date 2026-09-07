@@ -162,5 +162,8 @@ clearCompleted.addEventListener('click',function (){
 
 
 btnLogout.addEventListener("click",function(){
-    window.location.replace("login.html");
+    let ok = confirm("Are you sure you want to log out?");
+    if(ok){
+        window.location.replace("login.html");
+    }
 });
