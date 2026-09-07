@@ -4,6 +4,7 @@ const toDoList = document.querySelector(".todo-list");
 const totalTask = document.querySelector(".total-tasks");
 const completedTask = document.querySelector(".completed-tasks");
 const pendingTask = document.querySelector(".active-tasks");
+const btnLogout = document.querySelector("#btn-Logout");
 
 const clearCompleted = document.querySelector("#clear-completed");
 
@@ -157,4 +158,9 @@ clearCompleted.addEventListener('click',function (){
         renderByFilter();
         alert("Successfully deleted");
     }
+});
+
+
+btnLogout.addEventListener("click",function(){
+    window.location.replace("login.html");
 });
